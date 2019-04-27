@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "331818200207",
+    "firebase_url": "https://maps-2018-3dd9f.firebaseio.com",
+    "project_id": "maps-2018-3dd9f",
+    "storage_bucket": "maps-2018-3dd9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331818200207:android:b4193dbff57a9de5",
+        "android_client_info": {
+          "package_name": "org.fsociety.safehelm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "331818200207-sl143n0t3c87divdek0tl5eiegrkal8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkHjTgRc1gofpJ9sZQdBgKrLET3L8FIv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "331818200207-sl143n0t3c87divdek0tl5eiegrkal8p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
