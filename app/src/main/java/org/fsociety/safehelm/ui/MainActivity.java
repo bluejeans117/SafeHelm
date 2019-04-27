@@ -1,6 +1,7 @@
 package org.fsociety.safehelm.ui;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -32,6 +33,7 @@ import org.fsociety.safehelm.adapters.ChatroomRecyclerAdapter;
 import org.fsociety.safehelm.models.Chatroom;
 import org.fsociety.safehelm.models.User;
 import org.fsociety.safehelm.models.UserLocation;
+import org.fsociety.safehelm.services.LocationService;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -100,6 +102,32 @@ public class MainActivity extends AppCompatActivity implements
         initChatroomRecyclerView();
     }
 
+    private void startLocationService(){
+        if(!isLocationServiceRunning()){
+            Intent serviceIntent = new Intent(this, LocationService.class);
+//        this.startService(serviceIntent);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+
+                MainActivity.this.startForegroundService(serviceIntent);
+            }else{
+                startService(serviceIntent);
+            }
+        }
+    }
+
+    private boolean isLocationServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if("org.fsociety.safehelm.services.LocationService".equals(service.service.getClassName())) {
+                Log.d(TAG, "isLocationServiceRunning: location service is already running.");
+                return true;
+            }
+        }
+        Log.d(TAG, "isLocationServiceRunning: location service is not running.");
+        return false;
+    }
+
     private void getUserDetails() {
         if(mUserLocation == null) {
             mUserLocation = new UserLocation();
@@ -147,7 +175,10 @@ public class MainActivity extends AppCompatActivity implements
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
+                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -156,12 +187,11 @@ public class MainActivity extends AppCompatActivity implements
                 if(task.isSuccessful()) {
                     Location location = task.getResult();
                     GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                    Log.d(TAG, "onComplete: latitude: " + geoPoint.getLatitude());
-                    Log.d(TAG, "onComplete: longitude: " + geoPoint.getLongitude());
 
                     mUserLocation.setGeo_point(geoPoint);
                     mUserLocation.setTimestamp(null);
                     saveUserLocation();
+                    startLocationService();
                 }
             }
         });
