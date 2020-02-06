@@ -7,14 +7,18 @@ public class User implements Parcelable{
 
     private String email;
     private String user_id;
+    private String gender;
     private String username;
     private String avatar;
+    private String age;
 
-    public User(String email, String user_id, String username, String avatar) {
+    public User(String email, String user_id, String username, String avatar, String gender, String age) {
         this.email = email;
         this.user_id = user_id;
         this.username = username;
         this.avatar = avatar;
+        this.gender = gender;
+        this.age = age;
     }
 
     public User() {
@@ -26,6 +30,8 @@ public class User implements Parcelable{
         user_id = in.readString();
         username = in.readString();
         avatar = in.readString();
+        gender = in.readString();
+        age = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -39,6 +45,14 @@ public class User implements Parcelable{
             return new User[size];
         }
     };
+
+    public String getGender() { return gender; }
+
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getAge() { return age; }
+
+    public void setAge(String age) { this.age = age; }
 
     public String getAvatar() {
         return avatar;
@@ -83,6 +97,8 @@ public class User implements Parcelable{
                 ", user_id='" + user_id + '\'' +
                 ", username='" + username + '\'' +
                 ", avatar='" + avatar + '\'' +
+                ", gender='" + gender +'\'' +
+                ", age='" + age + '\'' +
                 '}';
     }
 
@@ -97,6 +113,7 @@ public class User implements Parcelable{
         dest.writeString(user_id);
         dest.writeString(username);
         dest.writeString(avatar);
+        dest.writeString(gender);
     }
 }
 
